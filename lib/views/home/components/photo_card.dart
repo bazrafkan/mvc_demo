@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class PhotoCard extends StatelessWidget {
   final String thumbnailUrl;
@@ -10,8 +11,13 @@ class PhotoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      thumbnailUrl,
+    // return Image.network(
+    //   thumbnailUrl,
+    // );
+
+    return FadeInImage.memoryNetwork(
+      placeholder: kTransparentImage,
+      image: thumbnailUrl,
     );
   }
 }

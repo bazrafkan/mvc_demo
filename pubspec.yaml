@@ -9,8 +9,11 @@ dependencies:
     cupertino_icons: ^0.1.2
     provider: ^4.0.4
     http: ^0.12.0+4
+    transparent_image: ^1.0.0
 dev_dependencies:
     flutter_test:
         sdk: flutter
 flutter:
     uses-material-design: true
+    assets:
+        - assets/

@@ -29,7 +29,6 @@ class HomeModel extends ChangeNotifier {
 
   void getter() async {
     _status = HomeModelStatus.Loading;
-    _photos = [];
     notifyListeners();
 
     try {

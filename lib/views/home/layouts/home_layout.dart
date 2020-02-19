@@ -20,30 +20,36 @@ class HomeLayout extends StatelessWidget {
         },
         child: Icon(Icons.refresh),
       ),
-      body: (viewModel.status != HomeModelStatus.Error)
-          ? Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                (viewModel.status == HomeModelStatus.Loading)
-                    ? LinearProgressIndicator()
-                    : Container(),
-                Expanded(
-                  flex: 1,
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemCount: viewModel.photos.length,
-                    itemBuilder: (context, index) {
-                      return PhotoCard(
-                        thumbnailUrl: viewModel.photos[index].thumbnailUrl,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            )
-          : PhotoErrorCard(errorMessage: viewModel.errorMessage),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          (viewModel.status == HomeModelStatus.Loading)
+              ? LinearProgressIndicator()
+              : Container(),
+          (viewModel.status == HomeModelStatus.Error)
+              ? PhotoErrorCard(
+                  errorMessage: viewModel.errorMessage,
+                  onPressed: () {
+                    viewController.getter(context);
+                  },
+                )
+              : Container(),
+          Expanded(
+            flex: 1,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: viewModel.photos.length,
+              itemBuilder: (context, index) {
+                return PhotoCard(
+                  thumbnailUrl: viewModel.photos[index].thumbnailUrl,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
