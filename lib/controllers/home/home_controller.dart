@@ -6,7 +6,7 @@ import 'package:mvc_demo/models/home/home_model.dart';
 class HomeController {
   HomeController();
 
-  void getter(BuildContext context) async {
+  void getter(BuildContext context) {
     HomeModel viewModel = Provider.of<HomeModel>(context, listen: false);
     // Add code here for getter
     viewModel.getter();

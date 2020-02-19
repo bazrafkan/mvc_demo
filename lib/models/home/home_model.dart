@@ -1,17 +1,21 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mvc_demo/models/home/photo.dart';
 
 enum HomeModelStatus {
   Ended,
   Loading,
+  Error,
 }
 
 class HomeModel extends ChangeNotifier {
   HomeModelStatus _status;
+  String _errorCode;
+  String _errorMessage;
+
+  String get errorCode => _errorCode;
+  String get errorMessage => _errorMessage;
   HomeModelStatus get status => _status;
 
   List<Photo> _photos = [];
@@ -25,16 +29,24 @@ class HomeModel extends ChangeNotifier {
 
   void getter() async {
     _status = HomeModelStatus.Loading;
+    _photos = [];
     notifyListeners();
-    _photos = await Photo.fetchPhotos(http.Client());
-    _status = HomeModelStatus.Ended;
+
+    try {
+      _photos = await Photo.fetchPhotos(http.Client());
+      _status = HomeModelStatus.Ended;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _status = HomeModelStatus.Error;
+    }
+
     notifyListeners();
   }
 
   void setter() {
     _status = HomeModelStatus.Loading;
     notifyListeners();
-
+    // Add code here for setter
     _status = HomeModelStatus.Ended;
     notifyListeners();
   }
@@ -42,7 +54,7 @@ class HomeModel extends ChangeNotifier {
   void update() {
     _status = HomeModelStatus.Loading;
     notifyListeners();
-
+    // Add code here for update
     _status = HomeModelStatus.Ended;
     notifyListeners();
   }
@@ -50,36 +62,8 @@ class HomeModel extends ChangeNotifier {
   void remove() {
     _status = HomeModelStatus.Loading;
     notifyListeners();
-
+    // Add code here for remove
     _status = HomeModelStatus.Ended;
     notifyListeners();
-  }
-}
-
-class Photo {
-  final int id;
-  final String title;
-  final String thumbnailUrl;
-
-  Photo({this.id, this.title, this.thumbnailUrl});
-
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      thumbnailUrl: json['thumbnailUrl'] as String,
-    );
-  }
-
-  static List<Photo> parsePhotos(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-
-    return parsed.map<Photo>((json) => Photo.fromJson(json)).toList();
-  }
-
-  static Future<List<Photo>> fetchPhotos(http.Client client) async {
-    final response =
-        await client.get('https://jsonplaceholder.typicode.com/photos');
-    return compute(parsePhotos, response.body);
   }
 }
